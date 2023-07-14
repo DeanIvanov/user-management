@@ -19,7 +19,8 @@ This is a REST API for CRUD operations on users. It uses Spring boot with Maven 
 
 ### Steps to run the application:
   - Run database creation script in order to create the database and tables:
-      - It is located in the project structure under resources/db/db-create.sql 
+      - It is located in the project structure under resources/db/db-create.sql.
+      - The script adds a database-specific user. If issues in its creation are present, it can be added manually with username 'superuser' and password '1234' or the database access properties can be adjusted 
   - Run database insert script in order to populate the database tables with test data:
       - It is located in the project structure under resources/db/db-insert-data.sql
   - Build and launch the application
