@@ -143,7 +143,7 @@ public class UserController {
         }
     }
 
-    @Operation(summary = "(INACTIVE) Soft-delete a user", description = "Soft delete a user by disabling their access.")
+    @Operation(summary = "Soft-delete a user", description = "Soft delete a user by disabling their access.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - the user has been soft deleted.", content = @Content),
             @ApiResponse(responseCode = "404", description = "A user with the specified ID has not been found.", content = @Content)})
@@ -152,7 +152,7 @@ public class UserController {
                                @PathVariable int id) {
         try {
             User user = userService.getById(id);
-//            user.setEnabled(false);
+            user.setEnabled(false);
             userService.update(id, user);
         }
         catch (EntityNotFoundException exception) {

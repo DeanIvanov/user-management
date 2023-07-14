@@ -31,6 +31,8 @@ public class UserDto {
     @Size (min = 10, max = 50, message = "Email address should be between 10 and 50 characters.")
     String email;
 
+    String password;
+
     public String getName() {
         return name;
     }
@@ -69,5 +71,13 @@ public class UserDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
