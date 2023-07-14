@@ -32,5 +32,5 @@ CREATE TABLE IF NOT EXISTS authorities (
 -- add all foreign keys
 
 -- Reference: authorities_users (table: authorities)
-ALTER TABLE authorities ADD CONSTRAINT authorities_users FOREIGN KEY authorities_users (username)
-    REFERENCES users (username);
+# ALTER TABLE authorities ADD CONSTRAINT authorities_users FOREIGN KEY authorities_users (username)
+#     REFERENCES users (username);
