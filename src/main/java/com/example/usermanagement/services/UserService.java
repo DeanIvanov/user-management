@@ -1,0 +1,28 @@
+package com.example.usermanagement.services;
+
+import com.example.usermanagement.models.User;
+
+import java.util.List;
+
+public interface UserService {
+
+    void create(int id, User user);
+
+    void update(int id, User user);
+
+    void delete(User user);
+
+    List<User> getAll();
+
+    List<User> getAllOrderedBySurname();
+
+    List<User> getAllOrderedByDob();
+
+    List<User> searchUsers(String search);
+
+    User getById(int id);
+
+    User getByEmail(String email);
+
+    User getCurrentUser();
+}
