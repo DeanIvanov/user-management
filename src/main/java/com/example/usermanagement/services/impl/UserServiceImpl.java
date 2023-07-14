@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
         newUser.setUsername(user.getUsername());
         //newUser.setPassword(passwordEncoder.encode(user.getPassword()));//TODO re-enable when security works
         newUser.setPassword(user.getPassword());
-        newUser.setEnabled(true);
+        newUser.setEnabled(user.isEnabled());
 
         userRepository.save(newUser);
     }
