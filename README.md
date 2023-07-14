@@ -18,6 +18,7 @@ This is a REST API for CRUD operations on users. It uses Spring boot with Maven 
   - A web browser for accessing the swagger documentation or application like Postman
 
 ### Steps to run the application:
+  - Run local host tool
   - Run database creation script in order to create the database and tables:
       - It is located in the project structure under resources/db/db-create.sql.
       - The script adds a database-specific user. If issues in its creation are present, it can be added manually with username 'superuser' and password '1234' or the database access properties can be adjusted 
