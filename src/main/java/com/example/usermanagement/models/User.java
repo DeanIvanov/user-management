@@ -1,9 +1,15 @@
 package com.example.usermanagement.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {
@@ -13,21 +19,19 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
-    @Column(name = "name")
+    @Size(min = 3, max = 15, message = "First name should be between 3 and 15 characters.")
     String name;
 
-    @Column(name = "surname")
+    @Size (min = 3, max = 25, message = "Last name should be between 3 and 25 characters.")
     String surname;
 
-    @Column(name = "dob")
     LocalDate dob;
 
-    @Column(name = "phone")
+    @Size (min = 8, max = 13, message = "Phone number should be between 8 and 13 digits.")
     String phone;
 
-    @Column(name = "email")
+    @Size (min = 10, max = 50, message = "Email address should be between 10 and 50 characters.")
     String email;
-
 
     public int getId() {
         return id;

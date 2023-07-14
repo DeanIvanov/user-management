@@ -1,6 +1,7 @@
 package com.example.usermanagement.services.impl;
 
 import com.example.usermanagement.exceptions.DuplicateEntityException;
+import com.example.usermanagement.exceptions.EntityNotFoundException;
 import com.example.usermanagement.models.User;
 import com.example.usermanagement.repositories.UserRepository;
 import com.example.usermanagement.services.UserService;
@@ -24,7 +25,6 @@ public class UserServiceImpl implements UserService {
         if(userRepository.existsByEmail(user.getEmail())) {
             throw new DuplicateEntityException(String.format("User with this email address (%s) already exists!", user.getEmail()));
         }
-
         //TODO add authority assignment here, create user through security and start using update method here instead
 
         userRepository.save(user);
@@ -32,6 +32,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void update(int id, User user) {
+        if(!userRepository.existsById(id)) {
+            throw new EntityNotFoundException(String.format("User with this ID (%s) does not exist!", id));
+        }
         User newUser = userRepository.getById(id);
         newUser.setName(user.getName());
         newUser.setSurname(user.getSurname());
@@ -45,6 +48,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(User user) {
+        if(!userRepository.existsById(user.getId())) {
+            throw new EntityNotFoundException(String.format("User with this ID (%s) does not exist!", user.getId()));
+        }
         userRepository.delete(user);
     }
 
@@ -70,11 +76,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(int id) {
+        if(!userRepository.existsById(id)) {
+            throw new EntityNotFoundException(String.format("User with this ID (%s) does not exist!", id));
+        }
         return userRepository.getById(id);
     }
 
     @Override
     public User getByEmail(String email) {
+        if(!userRepository.existsByEmail(email)) {
+            throw new DuplicateEntityException(String.format("User with this email address (%s) does not exist!", email));
+        }
         return userRepository.getByEmail(email);
     }
 
