@@ -8,7 +8,7 @@ public interface UserService {
 
     void create(int id, User user);
 
-    void update(int id, User user);
+    void update(int id, User user, boolean enabled);
 
     void delete(User user);
 

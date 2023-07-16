@@ -5,13 +5,12 @@ import com.example.usermanagement.exceptions.EntityNotFoundException;
 import com.example.usermanagement.models.User;
 import com.example.usermanagement.repositories.UserRepository;
 import com.example.usermanagement.services.UserService;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.core.Authentication;
-//import org.springframework.security.core.GrantedAuthority;
-//import org.springframework.security.core.authority.AuthorityUtils;
-//import org.springframework.security.core.context.SecurityContextHolder;
-//import org.springframework.security.crypto.password.PasswordEncoder;
-//import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,19 +20,14 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
 
-//    private PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
-//    private UserDetailsManager userDetailsManager;
+    private UserDetailsManager userDetailsManager;
 
-//    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, UserDetailsManager userDetailsManager) {
-//        this.userRepository = userRepository;
-//        this.passwordEncoder = passwordEncoder;
-//        this.userDetailsManager = userDetailsManager;
-//    }
-
-
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, UserDetailsManager userDetailsManager) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.userDetailsManager = userDetailsManager;
     }
 
     @Override
@@ -41,29 +35,37 @@ public class UserServiceImpl implements UserService {
         if(userRepository.existsByEmail(user.getEmail())) {
             throw new DuplicateEntityException(String.format("User with this email address (%s) already exists!", user.getEmail()));
         }
-        //TODO re-enable when security works
-        user.setUsername(user.getEmail());
-        user.setEnabled(true);
-//        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_USER");
-//        org.springframework.security.core.userdetails.User userDetails =
-//                new org.springframework.security.core.userdetails.User(
-//                        user.getEmail(),
-//                        passwordEncoder.encode(user.getPassword()),
-//                        authorities);
-//
-//        userDetailsManager.createUser(userDetails);
-//        User newUser = userRepository.getByUsername(user.getUsername());
-//
-//        update(newUser.getId(), user);
+        if(userRepository.existsByEmail(user.getEmail())) {
+            throw new DuplicateEntityException(String.format("User with this email address (%s) already exists!", user.getEmail()));
+        }
 
-        userRepository.save(user);
+        user.setEnabled(true);
+        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_USER");
+        org.springframework.security.core.userdetails.User userDetails =
+                new org.springframework.security.core.userdetails.User(
+                        user.getUsername(),
+                        passwordEncoder.encode(user.getPassword()),
+                        authorities);
+
+        userDetailsManager.createUser(userDetails);
+        User newUser = userRepository.getByUsername(user.getUsername());
+
+        update(newUser.getId(), user, true);
+
     }
 
     @Override
-    public void update(int id, User user) {
+    public void update(int id, User user, boolean enabled) {
         if(!userRepository.existsById(id)) {
             throw new EntityNotFoundException(String.format("User with this ID (%s) does not exist!", id));
         }
+        if(userRepository.existsByEmail(user.getEmail())) {
+            throw new DuplicateEntityException(String.format("User with this email address (%s) already exists!", user.getEmail()));
+        }
+        if(userRepository.existsByUsername(user.getUsername())) {
+            throw new DuplicateEntityException(String.format("User with this username (%s) already exists!", user.getUsername()));
+        }
+
         User newUser = userRepository.getById(id);
         newUser.setName(user.getName());
         newUser.setSurname(user.getSurname());
@@ -71,9 +73,8 @@ public class UserServiceImpl implements UserService {
         newUser.setPhone(user.getPhone());
         newUser.setEmail(user.getEmail());
         newUser.setUsername(user.getUsername());
-        //newUser.setPassword(passwordEncoder.encode(user.getPassword()));//TODO re-enable when security works
-        newUser.setPassword(user.getPassword());
-        newUser.setEnabled(user.isEnabled());
+        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        newUser.setEnabled(enabled);
 
         userRepository.save(newUser);
     }
@@ -132,9 +133,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getCurrentUser() {
-        //TODO re-enable when security works
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        return getByUsername(authentication.getName());
-        return null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return getByUsername(authentication.getName());
     }
 }

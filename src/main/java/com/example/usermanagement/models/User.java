@@ -39,7 +39,7 @@ public class User {
     String email;
 
     @Column(name = "username")
-    @Size (min = 10, max = 50, message = "Email address should be between 10 and 50 characters.")
+    @Size (min = 3, max = 50, message = "Username should be between 3 and 50 characters.")
     String username;
 
     @Column(name = "password")

@@ -19,12 +19,12 @@ CREATE TABLE IF NOT EXISTS users (
     username varchar(50) NOT NULL,
     password varchar(68)  NOT NULL,
     enabled bit  not null default 1,
-    UNIQUE INDEX users_unique_keys (email),
+    UNIQUE INDEX users_unique_keys (email,username),
     CONSTRAINT users_pk PRIMARY KEY (id)
 );
 
 -- Table: authorities
-CREATE TABLE IF NOT EXISTS authorities (
+CREATE TABLE authorities (
     username varchar(50)  NOT NULL,
     authority varchar(25)  NOT NULL
 );
@@ -32,5 +32,5 @@ CREATE TABLE IF NOT EXISTS authorities (
 -- add all foreign keys
 
 -- Reference: authorities_users (table: authorities)
-# ALTER TABLE authorities ADD CONSTRAINT authorities_users FOREIGN KEY authorities_users (username)
-#     REFERENCES users (username);
+ALTER TABLE authorities ADD CONSTRAINT authorities_users FOREIGN KEY authorities_users (username)
+    REFERENCES users (username);

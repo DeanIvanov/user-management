@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -16,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
+@SecurityRequirement(name = "usermanagementbasic")
 @RequestMapping("/api")
 public class UserController {
 
@@ -120,7 +122,7 @@ public class UserController {
     public User updateUser(@Parameter(description = "ID of the user that is to be updated.", required = true)
                            @PathVariable int id, @RequestBody User newUser) {
         try {
-            userService.update(id, newUser);
+            userService.update(id, newUser, true);
             return newUser;
         }
         catch (EntityNotFoundException exception) {
@@ -153,7 +155,7 @@ public class UserController {
         try {
             User user = userService.getById(id);
             user.setEnabled(false);
-            userService.update(id, user);
+            userService.update(id, user, false);
         }
         catch (EntityNotFoundException exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
