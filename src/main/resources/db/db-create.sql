@@ -10,16 +10,16 @@ GRANT ALL PRIVILEGES ON `user-management`.* TO `superuser`@`%`;
 
 -- Table: users
 CREATE TABLE IF NOT EXISTS users (
-    id int NOT NULL AUTO_INCREMENT,
-    name varchar(15) NULL,
-    surname varchar(20) NULL,
-    dob date NULL,
-    phone varchar(13) NULL,
-    email varchar(50) NULL,
-    username varchar(50) NOT NULL,
+    id int  NOT NULL AUTO_INCREMENT,
+    name varchar(15)  NULL,
+    surname varchar(20)  NULL,
+    dob date  NULL,
+    phone varchar(13)  NULL,
+    email varchar(50)  NULL,
+    username varchar(50)  NOT NULL,
     password varchar(68)  NOT NULL,
     enabled bit  not null default 1,
-    UNIQUE INDEX users_unique_keys (email,username),
+    UNIQUE INDEX users_unique_keys (username,email),
     CONSTRAINT users_pk PRIMARY KEY (id)
 );
 
