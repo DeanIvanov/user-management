@@ -1,7 +1,7 @@
 package com.example.usermanagement.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -15,6 +15,7 @@ import java.time.LocalDate;
 public class User {
 
     @Id
+    @JsonIgnore
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
@@ -45,6 +46,11 @@ public class User {
     @Column(name = "password")
     String password;
 
+    @JsonIgnore
+    @Column(name = "authority")
+    private String authority;
+
+    @JsonIgnore
     @Column(name = "enabled")
     boolean enabled;
 
@@ -111,6 +117,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(String authority) {
+        this.authority = authority;
     }
 
     public boolean isEnabled() {

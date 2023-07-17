@@ -11,26 +11,15 @@ GRANT ALL PRIVILEGES ON `user-management`.* TO `superuser`@`%`;
 -- Table: users
 CREATE TABLE IF NOT EXISTS users (
     id int  NOT NULL AUTO_INCREMENT,
-    name varchar(15)  NULL,
-    surname varchar(20)  NULL,
-    dob date  NULL,
-    phone varchar(13)  NULL,
-    email varchar(50)  NULL,
+    name varchar(15)  NOT NULL,
+    surname varchar(20)  NOT NULL,
+    dob date  NOT NULL,
+    phone varchar(13)  NOT NULL,
+    email varchar(50)  NOT NULL,
     username varchar(50)  NOT NULL,
     password varchar(68)  NOT NULL,
-    enabled bit  not null default 1,
+    authority varchar(25)  NOT NULL,
+    enabled boolean  NOT NULL default 1,
     UNIQUE INDEX users_unique_keys (username,email),
     CONSTRAINT users_pk PRIMARY KEY (id)
 );
-
--- Table: authorities
-CREATE TABLE authorities (
-    username varchar(50)  NOT NULL,
-    authority varchar(25)  NOT NULL
-);
-
--- add all foreign keys
-
--- Reference: authorities_users (table: authorities)
-ALTER TABLE authorities ADD CONSTRAINT authorities_users FOREIGN KEY authorities_users (username)
-    REFERENCES users (username);

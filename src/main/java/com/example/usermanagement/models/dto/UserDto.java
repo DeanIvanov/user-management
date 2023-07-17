@@ -1,6 +1,5 @@
 package com.example.usermanagement.models.dto;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -31,6 +30,11 @@ public class UserDto {
     @Size (min = 10, max = 50, message = "Email address should be between 10 and 50 characters.")
     String email;
 
+    @NotNull
+    @Size (min = 3, max = 50, message = "Username should be between 3 and 50 characters.")
+    String username;
+
+    @NotNull
     String password;
 
     public String getName() {

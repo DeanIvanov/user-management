@@ -27,7 +27,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @Operation(summary = "Get all users", description = "Get a list of all users in ascending order of their ID.")
+    @Operation(summary = "Get all users by order of ID", description = "Get a list of all users in ascending order of their ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - Users have been found.", content = @Content),
             @ApiResponse(responseCode = "404", description = "Users not found.", content = @Content)})
@@ -41,7 +41,7 @@ public class UserController {
         }
     }
 
-    @Operation(summary = "Get all users", description = "Get a list of all users in ascending order of their Surname.")
+    @Operation(summary = "Get all users by order of last name", description = "Get a list of all users in ascending order of their Surname.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - Users have been found.", content = @Content),
             @ApiResponse(responseCode = "404", description = "Users not found.", content = @Content)})
@@ -55,7 +55,7 @@ public class UserController {
         }
     }
 
-    @Operation(summary = "Get all users", description = "Get a list of all users in ascending order of their Date of Birth(DoB).")
+    @Operation(summary = "Get all users by order of dob", description = "Get a list of all users in ascending order of their Date of Birth(DoB).")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - Users have been found.", content = @Content),
             @ApiResponse(responseCode = "404", description = "Users not found.", content = @Content)})
@@ -69,7 +69,7 @@ public class UserController {
         }
     }
 
-    @Operation(summary = "Get user by ID", description = "Get a single user by their ID.")
+    @Operation(summary = "Get a user by ID", description = "Get a single user by their ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - A user has been found with the specified ID.", content = @Content),
             @ApiResponse(responseCode = "404", description = "User with the specified ID has not been found.", content = @Content)})
@@ -99,14 +99,14 @@ public class UserController {
         }
     }
 
-    @Operation(summary = "Create user", description = "Create a new user.")
+    @Operation(summary = "Create a user", description = "Create a new user.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - A user has been created.", content = @Content),
             @ApiResponse(responseCode = "409", description = "Duplication conflict - A user with this email address already exists.", content = @Content)})
     @PostMapping("/create")
     public User createUser(@RequestBody User user) {
         try {
-            userService.create(user.getId(), user);
+            userService.create(user);
             return user;
         }
         catch (DuplicateEntityException exception) {
@@ -114,7 +114,7 @@ public class UserController {
         }
     }
 
-    @Operation(summary = "Update user", description = "Update a user specified by their ID.")
+    @Operation(summary = "Update a user", description = "Update a user specified by their ID. Also removes access limitations if the user has previously been soft-deleted.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - the user has been updated.", content = @Content),
             @ApiResponse(responseCode = "404", description = "A user with the specified ID has not been found.", content = @Content)})

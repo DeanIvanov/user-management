@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void create(int id, User user) {
+    public void create(User user) {
         if(userRepository.existsByEmail(user.getEmail())) {
             throw new DuplicateEntityException(String.format("User with this email address (%s) already exists!", user.getEmail()));
         }
@@ -39,28 +39,9 @@ public class UserServiceImpl implements UserService {
             throw new DuplicateEntityException(String.format("User with this username (%s) already exists!", user.getUsername()));
         }
 
-        user.setEnabled(true);
-        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_USER");
-        org.springframework.security.core.userdetails.User userDetails =
-                new org.springframework.security.core.userdetails.User(
-                        user.getUsername(),
-                        passwordEncoder.encode(user.getPassword()),
-                        authorities);
-
-        userDetailsManager.createUser(userDetails);
-        User newUser = userRepository.getByUsername(user.getUsername());
-
-        update(newUser.getId(), user, true);
-
-    }
-
-    @Override
-    public void update(int id, User user, boolean enabled) {
-        if(!userRepository.existsById(id)) {
-            throw new EntityNotFoundException(String.format("User with this ID (%s) does not exist!", id));
-        }
-
-        User newUser = userRepository.getById(id);
+        User newUser = new User();
+        newUser.setId(userRepository.findTopByOrderByIdDesc().getId()+1);
+        newUser.setId(user.getId());
         newUser.setName(user.getName());
         newUser.setSurname(user.getSurname());
         newUser.setDob(user.getDob());
@@ -68,6 +49,34 @@ public class UserServiceImpl implements UserService {
         newUser.setEmail(user.getEmail());
         newUser.setUsername(user.getUsername());
         newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        newUser.setAuthority("ROLE_USER");
+        newUser.setEnabled(true);
+
+        userRepository.save(newUser);
+    }
+
+    @Override
+    public void update(int id, User user, boolean enabled) {
+        if(!userRepository.existsById(id)) {
+            throw new EntityNotFoundException(String.format("User with this ID (%s) does not exist!", id));
+        }
+        User newUser = userRepository.getById(id);
+
+        if(!newUser.getEmail().equals(user.getEmail()) && userRepository.existsByEmail(user.getEmail())) {
+            throw new DuplicateEntityException(String.format("User with this email address (%s) already exists!", user.getEmail()));
+        }
+        if(!newUser.getUsername().equals(user.getUsername()) && userRepository.existsByUsername(user.getUsername())) {
+            throw new DuplicateEntityException(String.format("User with this username (%s) already exists!", user.getUsername()));
+        }
+
+        newUser.setName(user.getName());
+        newUser.setSurname(user.getSurname());
+        newUser.setDob(user.getDob());
+        newUser.setPhone(user.getPhone());
+        newUser.setEmail(user.getEmail());
+        newUser.setUsername(user.getUsername());
+        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        newUser.setAuthority("ROLE_USER");
         newUser.setEnabled(enabled);
 
         userRepository.save(newUser);
@@ -119,8 +128,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getByUsername(String username) {
-        if(!userRepository.existsByEmail(username)) {
-            throw new DuplicateEntityException(String.format("User with this email address (%s) does not exist!", username));
+        if(!userRepository.existsByUsername(username)) {
+            throw new DuplicateEntityException(String.format("User with this username (%s) does not exist!", username));
         }
         return userRepository.getByUsername(username);
     }
