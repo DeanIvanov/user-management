@@ -35,8 +35,8 @@ public class UserServiceImpl implements UserService {
         if(userRepository.existsByEmail(user.getEmail())) {
             throw new DuplicateEntityException(String.format("User with this email address (%s) already exists!", user.getEmail()));
         }
-        if(userRepository.existsByEmail(user.getEmail())) {
-            throw new DuplicateEntityException(String.format("User with this email address (%s) already exists!", user.getEmail()));
+        if(userRepository.existsByUsername(user.getUsername())) {
+            throw new DuplicateEntityException(String.format("User with this username (%s) already exists!", user.getUsername()));
         }
 
         user.setEnabled(true);
@@ -58,12 +58,6 @@ public class UserServiceImpl implements UserService {
     public void update(int id, User user, boolean enabled) {
         if(!userRepository.existsById(id)) {
             throw new EntityNotFoundException(String.format("User with this ID (%s) does not exist!", id));
-        }
-        if(userRepository.existsByEmail(user.getEmail())) {
-            throw new DuplicateEntityException(String.format("User with this email address (%s) already exists!", user.getEmail()));
-        }
-        if(userRepository.existsByUsername(user.getUsername())) {
-            throw new DuplicateEntityException(String.format("User with this username (%s) already exists!", user.getUsername()));
         }
 
         User newUser = userRepository.getById(id);
